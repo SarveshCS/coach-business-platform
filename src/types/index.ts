@@ -12,6 +12,7 @@ export interface User {
   avatar?: string;
   phone?: string;
   gender?: 'male' | 'female' | 'other';
+  heightCm?: number;
   dateOfBirth?: string;
   globalRole: GlobalRole;
   createdAt: string;
@@ -469,6 +470,7 @@ export interface BodyMeasurement {
   membershipId: string;
   date: string;
   weightKg: number;
+  heightCm?: number;
   chestCm?: number;
   waistCm?: number;
   hipsCm?: number;

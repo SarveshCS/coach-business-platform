@@ -33,14 +33,18 @@ export default function ClientProfilePage() {
 
   const [name, setName] = useState(currentUser?.name || '');
   const [phone, setPhone] = useState(currentUser?.phone || '');
+  const [height, setHeight] = useState(String(currentUser?.heightCm || '178'));
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
 
+    const parsedHeight = parseFloat(height);
+
     updateUser(currentUser.id, {
       name,
       phone,
+      heightCm: !isNaN(parsedHeight) ? parsedHeight : undefined,
     });
 
     showToast('Profile Updated', 'Your profile details have been saved.', 'success');
@@ -84,12 +88,22 @@ export default function ClientProfilePage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Input
-              label="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 98765 43210"
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <Input
+                label="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+91 98765 43210"
+              />
+              <Input
+                label="Height (cm)"
+                type="number"
+                step="0.5"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                placeholder="178"
+              />
+            </div>
 
             <Button
               variant="primary"

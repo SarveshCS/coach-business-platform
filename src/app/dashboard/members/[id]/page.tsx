@@ -113,6 +113,7 @@ export default function MemberDetailPage() {
 
   const [isAddMeasurementOpen, setIsAddMeasurementOpen] = useState(false);
   const [measWeight, setMeasWeight] = useState('80');
+  const [measHeight, setMeasHeight] = useState(String(user?.heightCm || '178'));
   const [measBodyFat, setMeasBodyFat] = useState('16.5');
   const [measChest, setMeasChest] = useState('104');
   const [measWaist, setMeasWaist] = useState('85');
@@ -204,10 +205,12 @@ export default function MemberDetailPage() {
 
   const handleAddMeasurement = (e: React.FormEvent) => {
     e.preventDefault();
+    const parsedHeight = parseFloat(measHeight);
     addMeasurement({
       membershipId,
       date: new Date().toISOString().split('T')[0],
       weightKg: parseFloat(measWeight),
+      heightCm: !isNaN(parsedHeight) ? parsedHeight : undefined,
       bodyFatPercentage: measBodyFat ? parseFloat(measBodyFat) : undefined,
       chestCm: measChest ? parseFloat(measChest) : undefined,
       waistCm: measWaist ? parseFloat(measWaist) : undefined,
@@ -909,20 +912,20 @@ export default function MemberDetailPage() {
                 onChange={(e) => setMeasWeight(e.target.value)}
               />
               <Input
+                label="Height (cm)"
+                type="number"
+                step="0.5"
+                value={measHeight}
+                onChange={(e) => setMeasHeight(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Input
                 label="Body Fat (%)"
                 type="number"
                 step="0.1"
                 value={measBodyFat}
                 onChange={(e) => setMeasBodyFat(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Input
-                label="Chest (cm)"
-                type="number"
-                step="0.5"
-                value={measChest}
-                onChange={(e) => setMeasChest(e.target.value)}
               />
               <Input
                 label="Waist (cm)"
@@ -932,6 +935,13 @@ export default function MemberDetailPage() {
                 onChange={(e) => setMeasWaist(e.target.value)}
               />
             </div>
+            <Input
+              label="Chest (cm)"
+              type="number"
+              step="0.5"
+              value={measChest}
+              onChange={(e) => setMeasChest(e.target.value)}
+            />
             <Input
               label="Check-in Notes"
               value={measNotes}
