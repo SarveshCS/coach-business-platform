@@ -45,7 +45,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ toasts, showToast, removeToast }}>
       {children}
       {/* Toast Render Container */}
-      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0">
+      <div className="fixed bottom-4 sm:bottom-5 inset-x-4 sm:inset-x-auto sm:right-5 sm:max-w-sm sm:w-full z-50 flex flex-col gap-2 pointer-events-none items-center sm:items-stretch">
         {toasts.map((toast) => {
           const icons = {
             success: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />,
@@ -64,7 +64,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return (
             <div
               key={toast.id}
-              className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-3 ${borderColors[toast.variant]}`}
+              className={`pointer-events-auto w-full flex items-start gap-3 p-3.5 sm:p-4 rounded-xl border shadow-xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-3 ${borderColors[toast.variant]}`}
             >
               {icons[toast.variant]}
               <div className="flex-1 min-w-0">

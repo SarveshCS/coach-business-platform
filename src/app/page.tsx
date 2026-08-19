@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Palette,
+  LogIn,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -37,9 +38,9 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-teal-700 selection:text-white">
       {/* Top Header */}
-      <header className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur-md px-6 lg:px-12 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-teal-700 flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-xs">
+      <header className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur-md px-3 sm:px-6 lg:px-12 flex items-center justify-between sticky top-0 z-40 gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-teal-700 flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-xs shrink-0">
             CO
           </div>
           <div>
@@ -50,19 +51,28 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link href="/login">
-            <Button variant="outline" size="sm">
-              Sign In
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 px-2 sm:px-3 text-xs gap-0 sm:gap-1.5"
+              leftIcon={<LogIn className="w-4 h-4 text-slate-600 shrink-0" />}
+              aria-label="Sign In"
+              title="Sign In"
+            >
+              <span className="hidden sm:inline">Sign In</span>
             </Button>
           </Link>
           <Button
             variant="primary"
             size="sm"
+            className="h-9 px-2.5 sm:px-3.5 text-xs whitespace-nowrap"
             onClick={() => handleLaunch('coach', '/dashboard')}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
+            rightIcon={<ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />}
           >
-            Launch Coach App
+            <span className="hidden sm:inline">Launch Coach App</span>
+            <span className="inline sm:hidden">Launch App</span>
           </Button>
         </div>
       </header>
