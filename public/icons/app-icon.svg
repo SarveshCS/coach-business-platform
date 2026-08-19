@@ -1,13 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="128" fill="#0f766e"/>
-  <g transform="translate(96, 96)" fill="none" stroke="#ffffff" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Clean Dumbbell / Fitness Mark -->
-    <path d="M48 96 L272 96" />
-    <path d="M48 224 L272 224" />
-    <rect x="16" y="64" width="32" height="64" rx="8" fill="#ffffff" />
-    <rect x="272" y="64" width="32" height="64" rx="8" fill="#ffffff" />
-    <rect x="64" y="80" width="192" height="32" rx="6" fill="#14b8a6" />
-    <!-- Pulse Line -->
-    <path d="M48 160 L108 160 L136 120 L168 200 L196 160 L272 160" stroke="#fef08a" stroke-width="20" />
+  <defs>
+    <!-- Background Luxury Gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#042f2e" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+
+    <!-- Athletic Luminous Teal Accent -->
+    <linearGradient id="tealGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#2dd4bf" />
+    </linearGradient>
+
+    <!-- Subtle Ambient Glow -->
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Base Rounded Container (Squircle) -->
+  <rect width="512" height="512" rx="128" fill="url(#bg)" />
+
+  <!-- Ambient Glow -->
+  <circle cx="256" cy="256" r="190" fill="url(#glow)" />
+
+  <!-- Central Dynamic "C" & Kinetic Pulse Geometry -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer Kinetic Arc (Electric Teal) -->
+    <path
+      d="M 340 144 C 290 108 200 112 152 160 C 104 208 104 304 152 352 C 200 400 290 404 340 368"
+      stroke="url(#tealGrad)"
+      stroke-width="38"
+    />
+
+    <!-- Inner Core Forward Momentum Chevron (Pure White) -->
+    <path
+      d="M 224 196 L 296 256 L 224 316"
+      stroke="#ffffff"
+      stroke-width="38"
+    />
+
+    <!-- Pulse Energy Point (Pure White Glow) -->
+    <circle cx="368" cy="256" r="18" fill="#ffffff" />
   </g>
 </svg>
