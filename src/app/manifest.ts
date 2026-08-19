@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'CoachOS — Client App',
-    short_name: 'Coach Client',
+    name: 'CoachOS Member',
+    short_name: 'Member',
     description: 'Personalized training routines, macro targets, AI food vision, and direct coach communication.',
     start_url: '/app?source=pwa',
     scope: '/',

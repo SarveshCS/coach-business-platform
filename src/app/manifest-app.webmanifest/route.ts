@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const manifest = {
     id: '/app',
-    name: 'CoachOS — Client App',
-    short_name: 'Coach Client',
+    name: 'CoachOS Member',
+    short_name: 'Member',
     description: 'Personalized training routines, macro targets, AI food vision, and direct coach communication.',
     start_url: '/app?source=pwa',
     scope: '/',

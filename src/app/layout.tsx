@@ -5,7 +5,7 @@ import { DemoSwitcher } from '@/components/layout/DemoSwitcher';
 import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
 
 export const metadata: Metadata = {
-  applicationName: 'Coach Client',
+  applicationName: 'Member',
   title: 'CoachOS — Premier Coaching Business Operating System',
   description:
     'Multi-tenant coaching business operating system for workouts, diets, classes, client management, AI coaching tools, and private communities.',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Coach Client',
+    title: 'Member',
   },
   other: {
     'mobile-web-app-capable': 'yes',
