@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ClientAppLayout } from '@/components/layout/ClientAppLayout';
-import { Card, StatCard } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
@@ -105,28 +105,97 @@ export default function ClientProgressPage() {
           </Button>
         </div>
 
-        {/* 4 Biometric Stat Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard
-            title="Current Weight"
-            value={`${currentWeight} kg`}
-            subtitle="Latest check-in"
-          />
-          <StatCard
-            title="Height"
-            value={`${currentHeight} cm`}
-            subtitle={`${Math.floor(currentHeight / 30.48)}'${Math.round((currentHeight % 30.48) / 2.54)}" stature`}
-          />
-          <StatCard
-            title="Body Mass Index"
-            value={bmi.bmi}
-            subtitle={bmi.category}
-          />
-          <StatCard
-            title="Body Fat"
-            value={`${latestMeas?.bodyFatPercentage ? `${latestMeas.bodyFatPercentage}%` : '15.8%'}`}
-            subtitle="Calculated range"
-          />
+        {/* 4 Biometric Stat Cards - Spacious 2x2 Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Card 1: Current Weight */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Weight
+              </span>
+              <span className="text-[10px] font-bold text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-200/60">
+                Check-in
+              </span>
+            </div>
+            <div className="mt-2 flex items-baseline gap-1">
+              <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
+                {currentWeight}
+              </span>
+              <span className="text-xs font-bold text-slate-500 font-sans">kg</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 truncate">
+              {latestMeas ? formatDate(latestMeas.date) : 'Baseline'}
+            </p>
+          </div>
+
+          {/* Card 2: Height / Stature */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Height
+              </span>
+              <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/60 font-mono">
+                {Math.floor(currentHeight / 30.48)}&apos;{Math.round((currentHeight % 30.48) / 2.54)}&quot;
+              </span>
+            </div>
+            <div className="mt-2 flex items-baseline gap-1">
+              <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
+                {currentHeight}
+              </span>
+              <span className="text-xs font-bold text-slate-500 font-sans">cm</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 truncate">
+              Athlete Stature
+            </p>
+          </div>
+
+          {/* Card 3: Body Mass Index (BMI) */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                BMI Score
+              </span>
+              <span
+                className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
+                  bmi.category === 'Normal weight'
+                    ? 'text-emerald-700 bg-emerald-50 border-emerald-200/60'
+                    : 'text-amber-700 bg-amber-50 border-amber-200/60'
+                }`}
+              >
+                {bmi.category}
+              </span>
+            </div>
+            <div className="mt-2 flex items-baseline gap-1">
+              <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
+                {bmi.bmi}
+              </span>
+              <span className="text-xs font-bold text-slate-500 font-sans">BMI</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 truncate">
+              18.5 - 24.9 optimal
+            </p>
+          </div>
+
+          {/* Card 4: Body Fat % */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Body Fat
+              </span>
+              <span className="text-[10px] font-bold text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-200/60">
+                Athletic
+              </span>
+            </div>
+            <div className="mt-2 flex items-baseline gap-1">
+              <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
+                {latestMeas?.bodyFatPercentage ? latestMeas.bodyFatPercentage : '15.8'}
+              </span>
+              <span className="text-xs font-bold text-slate-500 font-sans">%</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1 truncate">
+              Body composition
+            </p>
+          </div>
         </div>
 
         {/* Weight History Chart */}
