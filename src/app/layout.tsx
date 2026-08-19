@@ -5,10 +5,11 @@ import { DemoSwitcher } from '@/components/layout/DemoSwitcher';
 import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
 
 export const metadata: Metadata = {
+  applicationName: 'Coach Client',
   title: 'CoachOS — Premier Coaching Business Operating System',
   description:
     'Multi-tenant coaching business operating system for workouts, diets, classes, client management, AI coaching tools, and private communities.',
-  manifest: '/manifest-app.webmanifest',
+  manifest: '/manifest.webmanifest',
   icons: {
     icon: [
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -24,6 +25,9 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Coach Client',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
   },
 };
 

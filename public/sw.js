@@ -1,8 +1,10 @@
-const CACHE_NAME = 'coachos-pwa-v1';
+const CACHE_NAME = 'coachos-pwa-v2';
 const STATIC_ASSETS = [
   '/',
+  '/manifest.webmanifest',
   '/manifest-app.webmanifest',
   '/icons/icon-192.png',
+  '/icons/icon-192-maskable.png',
   '/icons/icon-512.png',
   '/icons/icon-512-maskable.png',
   '/icons/app-icon.svg'
