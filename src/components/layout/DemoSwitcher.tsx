@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
+import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { useRouter } from 'next/navigation';
 import {
   UserCheck,
@@ -14,6 +15,9 @@ import {
   ChevronDown,
   GripVertical,
   X,
+  Smartphone,
+  Globe,
+  Lock,
 } from 'lucide-react';
 
 export const DemoSwitcher: React.FC = () => {
@@ -22,6 +26,7 @@ export const DemoSwitcher: React.FC = () => {
   const { resetToDefaults } = useData();
   const { showToast } = useToast();
   const router = useRouter();
+  const { isStandalone, isSimulatedStandalone, toggleSimulatedStandalone } = usePwaInstall();
 
   // Position state
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
@@ -45,7 +50,6 @@ export const DemoSwitcher: React.FC = () => {
         return;
       } catch {}
     }
-    // Default position: top right on mobile or top right/bottom left on desktop
     const defaultY = typeof window !== 'undefined' ? Math.max(16, window.innerHeight - 76) : 100;
     setPosition({ x: 16, y: defaultY });
   }, []);
@@ -58,7 +62,7 @@ export const DemoSwitcher: React.FC = () => {
     } catch {}
   }, []);
 
-  // Drag handlers using Pointer Events (works for both touch & mouse)
+  // Drag handlers using Pointer Events
   const handlePointerDown = (e: React.PointerEvent) => {
     isDraggingRef.current = true;
     hasMovedRef.current = false;
@@ -106,8 +110,14 @@ export const DemoSwitcher: React.FC = () => {
     persona: 'admin' | 'coach' | 'member' | 'multi' | 'orphan' | 'banned',
     targetRoute: string
   ) => {
+    // In standalone mode, prevent switching to management users
+    if (isStandalone && (persona === 'admin' || persona === 'coach')) {
+      showToast('Client PWA Mode', 'Management personas are restricted to desktop web browser.', 'warning');
+      return;
+    }
+
     switchDemoUser(persona);
-    showToast(`Switched to demo persona: ${persona.toUpperCase()}`, 'Application context updated', 'info');
+    showToast(`Switched to: ${persona.toUpperCase()}`, 'Application context updated', 'info');
     router.push(targetRoute);
     setIsOpen(false);
   };
@@ -117,9 +127,20 @@ export const DemoSwitcher: React.FC = () => {
     showToast('Mock data reset to initial defaults', 'All records restored', 'success');
   };
 
+  const handleTogglePwaMode = () => {
+    const nextMode = !isSimulatedStandalone;
+    toggleSimulatedStandalone(nextMode);
+    showToast(
+      nextMode ? 'Standalone Client PWA Enabled' : 'Normal Web Browser Mode Enabled',
+      nextMode
+        ? 'App is now simulating installed standalone client mode with strict route isolation.'
+        : 'Browser mode enabled with full management access.',
+      'info'
+    );
+  };
+
   if (!position) return null;
 
-  // Determine if flyout opens upward or downward based on current screen position
   const isNearBottom = typeof window !== 'undefined' && position.y > window.innerHeight / 2;
   const isNearRight = typeof window !== 'undefined' && position.x > window.innerWidth / 2;
 
@@ -141,8 +162,14 @@ export const DemoSwitcher: React.FC = () => {
           className="flex items-center gap-2 px-3 py-1.5 cursor-grab active:cursor-grabbing text-xs font-semibold text-slate-800 transition-colors"
         >
           <GripVertical className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-          <span className="text-[11px] text-slate-500 font-medium shrink-0">Persona:</span>
+          <span
+            className={`w-2 h-2 rounded-full shrink-0 ${
+              isStandalone ? 'bg-teal-500 ring-2 ring-teal-200' : 'bg-emerald-500'
+            }`}
+          />
+          <span className="text-[11px] text-slate-500 font-medium shrink-0">
+            {isStandalone ? 'Client PWA:' : 'Persona:'}
+          </span>
           <button
             type="button"
             onClick={handleToggleOpen}
@@ -159,17 +186,33 @@ export const DemoSwitcher: React.FC = () => {
           </button>
         </div>
 
-        {/* Expandable Menu (Positioned Upward or Downward dynamically) */}
+        {/* Expandable Menu */}
         {isOpen && (
           <div
             className={`absolute ${isNearBottom ? 'bottom-full mb-2' : 'top-full mt-2'} ${
               isNearRight ? 'right-0' : 'left-0'
-            } w-64 bg-white border border-slate-300 rounded-2xl shadow-2xl p-2.5 z-50 flex flex-col gap-1 animate-in fade-in zoom-in-95`}
+            } w-72 bg-white border border-slate-300 rounded-2xl shadow-2xl p-2.5 z-50 flex flex-col gap-1 animate-in fade-in zoom-in-95`}
           >
-            <div className="flex items-center justify-between px-2 py-1 border-b border-slate-100 mb-1">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Switch Demo Persona
-              </p>
+            {/* Header with Mode Badge */}
+            <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-100 mb-1">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  {isStandalone ? 'Client PWA Personas' : 'Switch Demo Persona'}
+                </p>
+                <span className="text-[10px] font-semibold text-teal-700 flex items-center gap-1 mt-0.5">
+                  {isStandalone ? (
+                    <>
+                      <Smartphone className="w-3 h-3 text-teal-600" />
+                      Standalone Client Mode
+                    </>
+                  ) : (
+                    <>
+                      <Globe className="w-3 h-3 text-slate-500" />
+                      Normal Web Browser
+                    </>
+                  )}
+                </span>
+              </div>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer"
@@ -178,28 +221,42 @@ export const DemoSwitcher: React.FC = () => {
               </button>
             </div>
 
-            <button
-              onClick={() => handleSwitch('coach', '/dashboard')}
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-900 transition-colors text-left cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-teal-700" />
-                <span className="font-semibold">Coach (Rahul)</span>
-              </div>
-              <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Dashboard</span>
-            </button>
+            {/* Coach & Admin Personas: ONLY visible in Normal Browser Mode */}
+            {!isStandalone && (
+              <>
+                <button
+                  onClick={() => handleSwitch('coach', '/dashboard')}
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-900 transition-colors text-left cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5 text-teal-700" />
+                    <span className="font-semibold">Coach (Rahul)</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Dashboard</span>
+                </button>
 
-            <button
-              onClick={() => handleSwitch('admin', '/dashboard/admin')}
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-900 transition-colors text-left cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-indigo-600" />
-                <span className="font-semibold">Super Admin</span>
-              </div>
-              <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Admin</span>
-            </button>
+                <button
+                  onClick={() => handleSwitch('admin', '/dashboard/admin')}
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-900 transition-colors text-left cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Layers className="w-3.5 h-3.5 text-indigo-600" />
+                    <span className="font-semibold">Super Admin</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Admin</span>
+                </button>
+              </>
+            )}
 
+            {/* Standalone info note when coach/admin are hidden */}
+            {isStandalone && (
+              <div className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-500 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span>Coach &amp; Admin personas hidden in Client PWA standalone mode.</span>
+              </div>
+            )}
+
+            {/* Member Personas: Available in both modes */}
             <button
               onClick={() => handleSwitch('member', '/app')}
               className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition-colors text-left cursor-pointer"
@@ -208,7 +265,7 @@ export const DemoSwitcher: React.FC = () => {
                 <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="font-semibold">Member (Aman)</span>
               </div>
-              <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">1-Gym App</span>
+              <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Single Gym</span>
             </button>
 
             <button
@@ -244,7 +301,27 @@ export const DemoSwitcher: React.FC = () => {
               <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Banned</span>
             </button>
 
-            <div className="mt-2 pt-2 border-t border-slate-200">
+            {/* Mode Simulator & Reset Buttons */}
+            <div className="mt-2 pt-2 border-t border-slate-200 flex flex-col gap-1.5">
+              {/* Standalone Simulator Toggle */}
+              <button
+                type="button"
+                onClick={handleTogglePwaMode}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer border ${
+                  isStandalone
+                    ? 'bg-teal-50 text-teal-800 border-teal-200 hover:bg-teal-100'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5 text-teal-700" />
+                  <span>Simulate Standalone PWA</span>
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase">
+                  {isStandalone ? 'Active' : 'Off'}
+                </span>
+              </button>
+
               <button
                 onClick={handleReset}
                 className="w-full flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 transition-colors cursor-pointer"

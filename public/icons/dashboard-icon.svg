@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#0f172a"/>
+  <g transform="translate(112, 112)" fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Studio Grid / Layout mark -->
+    <rect x="24" y="24" width="108" height="108" rx="20" fill="#0f766e" stroke="#14b8a6"/>
+    <rect x="156" y="24" width="108" height="108" rx="20" fill="#334155" stroke="#64748b"/>
+    <rect x="24" y="156" width="108" height="108" rx="20" fill="#334155" stroke="#64748b"/>
+    <rect x="156" y="156" width="108" height="108" rx="20" fill="#0f766e" stroke="#14b8a6"/>
+  </g>
+</svg>

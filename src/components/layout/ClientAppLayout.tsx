@@ -19,10 +19,15 @@ import {
   LogOut,
   CheckCircle2,
   Lock,
+  Download,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useStandaloneGuard } from '@/hooks/useStandaloneGuard';
+import { usePwaInstall } from '@/hooks/usePwaInstall';
 
 export const ClientAppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useStandaloneGuard();
+  const { isStandalone } = usePwaInstall();
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, userMemberships, logout } = useAuth();
@@ -151,6 +156,19 @@ export const ClientAppLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
         {/* Right action icons */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Install App Shortcut */}
+          {!isStandalone && (
+            <Link
+              href="/app/install"
+              className="p-1.5 sm:p-2 rounded-lg text-slate-500 hover:text-teal-700 hover:bg-slate-100 transition-colors flex items-center gap-1"
+              title="Install Client App on Device"
+              aria-label="Install Client App"
+            >
+              <Download className="w-4 h-4 text-teal-700" />
+              <span className="hidden sm:inline text-xs font-bold text-teal-700">Install</span>
+            </Link>
+          )}
+
           {/* Coach Library Shortcut */}
           <Link
             href="/app/coach"

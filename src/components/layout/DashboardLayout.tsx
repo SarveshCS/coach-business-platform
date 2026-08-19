@@ -48,7 +48,10 @@ interface NavGroup {
   items: NavItem[];
 }
 
+import { useStandaloneGuard } from '@/hooks/useStandaloneGuard';
+
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useStandaloneGuard();
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, globalRole, logout } = useAuth();
