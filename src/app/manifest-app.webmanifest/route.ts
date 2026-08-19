@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const manifest = {
-    id: '/app/',
-    name: 'Coach Business Platform — Client App',
+    id: '/app',
+    name: 'CoachOS — Client App',
     short_name: 'Coach Client',
     description: 'Personalized training routines, macro targets, AI food vision, and direct coach communication.',
-    start_url: '/app/',
-    scope: '/app/',
+    start_url: '/app?source=pwa',
+    scope: '/',
     display: 'standalone',
+    display_override: ['standalone', 'minimal-ui', 'browser'],
     orientation: 'portrait',
     background_color: '#f8fafc',
     theme_color: '#0f766e',

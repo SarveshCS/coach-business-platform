@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const manifest = {
-    id: '/dashboard/',
-    name: 'Coach Business Platform — Studio & Dashboard',
+    id: '/dashboard',
+    name: 'CoachOS — Studio & Dashboard',
     short_name: 'Coach Studio',
     description: 'Coach management suite, client CRM, automated billing, workout studios, and AI protocol builder.',
-    start_url: '/dashboard/',
-    scope: '/dashboard/',
+    start_url: '/dashboard?source=pwa',
+    scope: '/',
     display: 'standalone',
+    display_override: ['standalone', 'minimal-ui', 'browser'],
     orientation: 'any',
     background_color: '#f8fafc',
     theme_color: '#0f766e',

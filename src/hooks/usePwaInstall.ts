@@ -33,12 +33,27 @@ export function usePwaInstall() {
     const sim = localStorage.getItem(SIMULATED_STANDALONE_KEY) === 'true';
     setIsSimulatedStandalone(sim);
 
-    // Detect native standalone display mode
+    // Detect URL parameter (e.g. ?source=pwa or ?mode=pwa)
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasPwaParam = urlParams.get('source') === 'pwa' || urlParams.get('mode') === 'pwa';
+    if (hasPwaParam) {
+      try {
+        sessionStorage.setItem('coach_pwa_session', 'true');
+      } catch {}
+    }
+    const isSessionPwa = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('coach_pwa_session') === 'true';
+
+    // Detect native standalone display mode across all browser engines
     const isNativeStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      window.matchMedia('(display-mode: minimal-ui)').matches ||
+      window.matchMedia('(display-mode: window-controls-overlay)').matches ||
       // @ts-expect-error iOS Safari navigator.standalone non-standard property
       window.navigator?.standalone === true ||
-      document.referrer.includes('android-app://');
+      document.referrer.includes('android-app://') ||
+      hasPwaParam ||
+      isSessionPwa;
 
     const effectiveStandalone = isNativeStandalone || sim;
     setIsStandalone(effectiveStandalone);
@@ -66,6 +81,18 @@ export function usePwaInstall() {
       setPlatform('desktop');
     }
 
+    // Listen for display mode changes dynamically
+    const standaloneMediaQuery = window.matchMedia('(display-mode: standalone)');
+    const handleDisplayChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setIsStandalone(true);
+        setInstallStatus('installed');
+      }
+    };
+    if (standaloneMediaQuery.addEventListener) {
+      standaloneMediaQuery.addEventListener('change', handleDisplayChange);
+    }
+
     // Listen for beforeinstallprompt event on Chromium/Android
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
@@ -89,6 +116,9 @@ export function usePwaInstall() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
+      if (standaloneMediaQuery.removeEventListener) {
+        standaloneMediaQuery.removeEventListener('change', handleDisplayChange);
+      }
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
